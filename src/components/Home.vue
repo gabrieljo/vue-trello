@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { board } from "../api";
 export default {
   data() {
     return {
@@ -35,14 +35,10 @@ export default {
   methods: {
     fetchData() {
       this.loading = true;
-
-      axios
-        .get("http://localhost:3000/boards")
-        .then(res => {
-          this.boards = res.data;
-        })
-        .catch(res => {
-          this.$router.replace("/login");
+      board
+        .fetch()
+        .then(data => {
+          this.boards = data;
         })
         .finally(_ => {
           this.loading = false;
