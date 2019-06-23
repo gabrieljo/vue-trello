@@ -14,25 +14,28 @@
         </router-link>
       </div>
       <div class="board-item board-item-new">
-        <a href class="new-board-btn" @click.prevent="addBoard">Create new board</a>
+        <a href class="new-board-btn" @click.prevent="SET_IS_ADD_BOARD(true)">Create new board</a>
       </div>
     </div>
-    <AddBoard v-if="isAddBoard" @close="isAddBoard=false" @submit="onAddBoard"/>
+    <AddBoard v-if="isAddBoard" @submit="onAddBoard"/>
   </div>
 </template>
 
 <script>
 import { board } from "../api";
 import AddBoard from "./AddBoard";
+import { mapState, mapMutations } from "vuex";
 export default {
   components: { AddBoard },
   data() {
     return {
       loading: false,
       boards: [],
-      error: "",
-      isAddBoard: false
+      error: ""
     };
+  },
+  computed: {
+    ...mapState(["isAddBoard"])
   },
   created() {
     this.fetchData();
@@ -43,6 +46,7 @@ export default {
     });
   },
   methods: {
+    ...mapMutations(["SET_IS_ADD_BOARD"]),
     fetchData() {
       this.loading = true;
       board
@@ -55,7 +59,7 @@ export default {
         });
     },
     addBoard() {
-      this.isAddBoard = true;
+      // this.$store.commit("SET_IS_ADD_BOARD", true);
     },
     onAddBoard(title) {
       board.create(title).then(() => this.fetchData());
