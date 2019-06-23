@@ -31,6 +31,10 @@ export const board = {
   fetch() {
     console.log("fetch");
     return request("get", "boards");
+  },
+  create(title) {
+    console.log(title);
+    return request("post", "boards", { title });
   }
 };
 
