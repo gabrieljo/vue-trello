@@ -29,7 +29,6 @@ export const setAuthInHeader = token => {
 
 export const board = {
   fetch() {
-    console.log("fetch");
     return request("get", "boards");
   },
   create(title) {

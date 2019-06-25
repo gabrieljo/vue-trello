@@ -58,11 +58,8 @@ export default {
           this.loading = false;
         });
     },
-    addBoard() {
-      // this.$store.commit("SET_IS_ADD_BOARD", true);
-    },
-    onAddBoard(title) {
-      board.create(title).then(() => this.fetchData());
+    onAddBoard() {
+      this.fetchData();
     }
   }
 };
