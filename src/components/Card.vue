@@ -2,7 +2,15 @@
   <Modal class="modal-card">
     <div class="modal-card-header" slot="header">
       <div class="modal-card-header-title">
-        <input type="text" class="form-control" :value="card.title" readonly>
+        <input
+          type="text"
+          class="form-control"
+          :value="card.title"
+          :readonly="!toggleTitle"
+          @click="toggleTitle=true"
+          @blur="onBlurTitle"
+          ref="inputTitle"
+        >
       </div>
       <a href class="modal-close-btn" @click.prevent="onClose">&times;</a>
     </div>
@@ -15,8 +23,11 @@
         cols="30"
         rows="3"
         placeholder="add a more detailsed description..."
-        readonly
+        :readonly="!toggleDescription"
+        @click="toggleDescription=true"
+        @blur="onBlurDescription"
         v-model="card.description"
+        ref="inputDescription"
       ></textarea>
     </div>
     <div slot="footer"></div>
@@ -29,6 +40,12 @@ import { mapActions, mapState } from "vuex";
 
 export default {
   components: { Modal },
+  data() {
+    return {
+      toggleTitle: false,
+      toggleDescription: false
+    };
+  },
   computed: {
     ...mapState({
       card: "card",
@@ -36,13 +53,33 @@ export default {
     })
   },
   created() {
-    const id = this.$route.params.cid;
-    this.FETCH_CARD({ id });
+    this.fetchCard();
   },
   methods: {
-    ...mapActions(["FETCH_CARD"]),
+    ...mapActions(["FETCH_CARD", "UPDATE_CARD"]),
     onClose() {
       this.$router.push(`/b/${this.board.id}`);
+    },
+    fetchCard() {
+      const id = this.$route.params.cid;
+      this.FETCH_CARD({ id });
+    },
+    onBlurTitle() {
+      this.toggleTitle = false;
+      const title = this.$refs.inputTitle.value.trim();
+      if (!title) return;
+
+      this.UPDATE_CARD({ id: this.card.id, title }).then(() =>
+        this.fetchCard()
+      );
+    },
+    onBlurDescription() {
+      this.toggleDescription = false;
+      const description = this.$refs.inputDescription.value.trim();
+      if (!description) return;
+      this.UPDATE_CARD({ id: this.card.id, description }).then(() =>
+        this.fetchCard()
+      );
     }
   }
 };
