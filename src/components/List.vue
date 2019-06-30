@@ -72,7 +72,7 @@ export default {
 
 .card-list {
   flex: 1 1 auto;
-  overflow-y: scroll;
+  /* overflow-y: scroll; */
 }
 
 .empty-card-item {
